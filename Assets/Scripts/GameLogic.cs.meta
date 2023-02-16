@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 944d430b5ccefca4a9a37f57e14025b9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - candyObject: {fileID: 3806299511786326828, guid: 9e14c8ce8ace0e349adb2891995981f4, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
