@@ -34,8 +34,14 @@ public class GameLogic : MonoBehaviour
 
     public int minMatch = 3;
     public int scorePerCandy = 100;
-    public Text scoreText;
     public GameObject[] prototypes;
+    public Text scoreText;
+
+    // audio
+    private AudioSource audioSource;
+    public AudioClip noMatchSound;
+    public AudioClip matchSound1;
+    public AudioClip matchSound2;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +52,7 @@ public class GameLogic : MonoBehaviour
             spawnQueue[i] = maxRow;
         }
         spawnTimer = spawnDelayTime; // want first wave candy to spawn immedialy
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -90,6 +97,8 @@ public class GameLogic : MonoBehaviour
                 }
                 else if (lastMovedObject != null)
                 {
+                    audioSource.PlayOneShot(noMatchSound);
+
                     moveCandy(lastMovedObject, lastInvertMovedDirection);
                     lastMovedObject = null;
                     skipCheck = true;
@@ -297,10 +306,19 @@ public class GameLogic : MonoBehaviour
             }
         }
 
-        score += matchObjs.Count * scorePerCandy;
-        if (scoreText != null) scoreText.text = "Score: " + score.ToString();
+        if (matchObjs.Count > 0)
+        {
+            // update score
+            score += matchObjs.Count * scorePerCandy;
+            if (scoreText != null) scoreText.text = "Score: " + score.ToString();
 
-        destroyCandies(matchObjs);
+            // play sound
+            if (matchObjs.Count == 3) audioSource.PlayOneShot(matchSound1);
+            else audioSource.PlayOneShot(matchSound2);
+
+            destroyCandies(matchObjs);
+        }
+
         return matchObjs.Count > 0;
     }
 
