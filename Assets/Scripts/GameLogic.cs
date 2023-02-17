@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class GameLogic : MonoBehaviour
     private static GameObject[,] candies = new GameObject[maxRow, maxCol];
     private static int[] spawnQueue = new int[maxCol];
 
-    private GameState gameState;
+    public GameState gameState;
     private GameObject selectedObject;
     private Vector2 startMousePosition;
     private GameObject lastMoveObject;
@@ -29,8 +30,11 @@ public class GameLogic : MonoBehaviour
     private GameObject lastMovedObject;
     private Direction lastInvertMovedDirection;
     private bool skipCheck = false;
+    private int score = 0;
 
     public int minMatch = 3;
+    public int scorePerCandy = 100;
+    public Text scoreText;
     public GameObject[] prototypes;
 
     // Start is called before the first frame update
@@ -292,6 +296,9 @@ public class GameLogic : MonoBehaviour
                 matchObjs.UnionWith(mayMatchObjs);
             }
         }
+
+        score += matchObjs.Count * scorePerCandy;
+        if (scoreText != null) scoreText.text = "Score: " + score.ToString();
 
         destroyCandies(matchObjs);
         return matchObjs.Count > 0;
