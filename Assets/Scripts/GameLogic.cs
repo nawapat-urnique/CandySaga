@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameLogic : MonoBehaviour
 {
     private enum Direction { UP, RIGHT, DOWN, LEFT }
-    public enum GameState
+    private enum GameState
     {
         SPAWN, // spawning candy
         WAIT, // wait for candy moving to its position
@@ -22,7 +22,8 @@ public class GameLogic : MonoBehaviour
     private static GameObject[,] candies = new GameObject[maxRow, maxCol];
     private static int[] spawnQueue = new int[maxCol];
 
-    public GameState gameState;
+    private bool isGamePause = false;
+    private GameState gameState;
     private GameObject selectedObject;
     private Vector2 startMousePosition;
     private GameObject lastMoveObject;
@@ -35,6 +36,7 @@ public class GameLogic : MonoBehaviour
     public int minMatch = 3;
     public int scorePerCandy = 100;
     public GameObject[] prototypes;
+    public GameObject pauseMenu;
     public Text scoreText;
 
     // audio
@@ -46,6 +48,8 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isGamePause = false;
+        Time.timeScale = 1f;
         gameState = GameState.SPAWN;
         for (int i = 0; i < spawnQueue.Length; i++)
         {
@@ -58,6 +62,23 @@ public class GameLogic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isGamePause)
+            {
+                pauseMenu.SetActive(false);
+                Time.timeScale = 1f;
+                isGamePause = false;
+            }
+            else
+            {
+                pauseMenu.SetActive(true);
+                Time.timeScale = 0f;
+                isGamePause = true;
+            }
+            return;
+        }
+
         switch (gameState)
         {
             case GameState.SPAWN:
